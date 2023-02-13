@@ -21,7 +21,6 @@ async function getTicketByUserId(userId: number) {
   if (!ticket) {
     throw notFoundError();
   }
-
   return ticket;
 }
 
