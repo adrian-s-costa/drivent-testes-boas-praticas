@@ -1,0 +1,17 @@
+Create a module for caching in the project using Redis, the intention is to use it to retrieve data fastly on the routes that you dont need the data to be the most recent, this means, the routes that should have caching are: 
+- events
+ 
+The endpoints must have a property that allow to disable the cache if wanted through header, allow-cache: true or false, when the allow-cache is not provide or false the cache is not supposed to be used. To test the implementation create test cases in the respctive files of the modules edited
+
+The TTL must be 5 minutes. Uses a cache key according to event, using it ID to record the data. To invalidate data, create an endpoint to be listener through REST:
+
+- POST (/event/:id)
+- body schema = new event record, after event repository update call this POST with new records, write-through 
+
+this route must have the function of updating the cache record. Everytime the service is called and Events is updated, update cache as well.
+
+Use docker to run Redis and configure the connection using the same pattern as postgres.
+
+The test must follow these principles: verify if the postgres database is being hit wuhen cache is enable, it should not. 
+
+Populate the database how needed and using the rules of prisma schema constraints

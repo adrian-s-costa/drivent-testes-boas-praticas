@@ -24,9 +24,18 @@ async function isCurrentEventActive(): Promise<boolean> {
   return now.isAfter(eventStartsAt) && now.isBefore(eventEndsAt);
 }
 
+async function updateEvent(eventId: number, eventData: Partial<Event>): Promise<GetFirstEventResult> {
+  const event = await eventRepository.findById(eventId);
+  if (!event) throw notFoundError();
+
+  const updatedEvent = await eventRepository.update(eventId, eventData);
+  return exclude(updatedEvent, "createdAt", "updatedAt");
+}
+
 const eventsService = {
   getFirstEvent,
   isCurrentEventActive,
+  updateEvent,
 };
 
 export default eventsService;

@@ -4,6 +4,7 @@ import { User } from "@prisma/client";
 import { createUser } from "./factories";
 import { createSession } from "./factories/sessions-factory";
 import { prisma } from "@/config";
+import { getRedis } from "@/config";
 
 export async function cleanDb() {
   await prisma.address.deleteMany({});
@@ -17,6 +18,13 @@ export async function cleanDb() {
   await prisma.ticketType.deleteMany({});
   await prisma.room.deleteMany({});
   await prisma.hotel.deleteMany({});
+}
+
+export async function cleanRedis() {
+  const redis = getRedis();
+  if (redis) {
+    await redis.flushDb();
+  }
 }
 
 export async function generateValidToken(user?: User) {

@@ -8,6 +8,15 @@ Back-end for Driven.t, an event management solution.
 
 Driven.t is a web browser application with which you can manage every single aspect of your event.
 
+### Features
+
+- Event management API
+- Redis caching for improved performance on event endpoints
+  - Optional caching via `allow-cache` header
+  - 5-minute TTL
+  - Write-through cache updates
+  - See [REDIS_SETUP.md](REDIS_SETUP.md) for details
+
 ## How to run for development
 
 1. Clone this repository
@@ -110,17 +119,24 @@ npm run dev:postgres
 
 `.env.development` and `.env.test` must be changed if you and to run the application locally or inside docker. You can populate files based on `.env.example` file, but you need to consider the following:
 
-- Running application locally (postgres and node):
+- Running application locally (postgres, redis and node):
 
-Add your postgres credentials and make sure to create given database before running the application.
+Add your postgres credentials and make sure to create given database before running the application. Also ensure Redis is running locally or via Docker.
 
-- Running application inside docker (postgres and node):
+- Running application inside docker (postgres, redis and node):
 
-Set `POSTGRES_HOST` to `drivent-postgres-development` for `.env.development` and `drivent-postgres-test` for `.env.test` file. It is the name of the postgres container inside docker-compose file. Docker Compose will start the postgres container for you, create the database and host alias for you.
+Set `POSTGRES_HOST` to `drivent-postgres-development` for `.env.development` and `drivent-postgres-test` for `.env.test` file. Set `REDIS_HOST` to `drivent-redis-test`. Docker Compose will start the postgres and redis containers for you, create the database and host alias for you.
 
-- Running application locally (node) but postgres is running inside docker:
+- Running application locally (node) but postgres and redis are running inside docker:
 
-Set `POSTGRES_HOST` to `localhost` for `.env.development` and `localhost` for `.env.test` file. Docker compose is configured to expose postgres container to your localhost.
+Set `POSTGRES_HOST` to `localhost` and `REDIS_HOST` to `localhost` for both `.env.development` and `.env.test` files. Docker compose is configured to expose postgres and redis containers to your localhost.
+
+**Starting Docker services:**
+```bash
+docker compose up -d
+```
+
+This will start PostgreSQL (port 5433) and Redis (port 6379).
 
 ## What to do when add new ENV VARIABLES
 
